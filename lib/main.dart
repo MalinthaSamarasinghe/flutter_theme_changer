@@ -43,16 +43,25 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (context) => ThemeBloc(),
       child: BlocBuilder<ThemeBloc, ThemeState>(
+        buildWhen: (previous, current) => previous.themeData != current.themeData,
         builder: (context, state) {
           return MaterialApp(
             title: 'Material App',
-            theme: state.appThemeMode == AppThemeMode.system
-                ? View.of(context).platformDispatcher.platformBrightness == Brightness.dark ? ThemeData.dark() : ThemeData.light()
-                : state.appThemeMode == AppThemeMode.dark ? ThemeData.dark() : ThemeData.light(),
+            theme: _getTheme(context),
             home: HomeScreen(),
           );
         },
       ),
     );
+  }
+
+  ThemeData _getTheme(BuildContext context) {
+    final themeState = context.read<ThemeBloc>().state;
+    if (themeState.appThemeMode == AppThemeMode.system) {
+      return View.of(context).platformDispatcher.platformBrightness == Brightness.dark
+          ? ThemeData.dark()
+          : ThemeData.light();
+    }
+    return themeState.appThemeMode == AppThemeMode.dark ? ThemeData.dark() : ThemeData.light();
   }
 }

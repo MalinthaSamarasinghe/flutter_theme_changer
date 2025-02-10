@@ -23,7 +23,7 @@ class ThemeBloc extends HydratedBloc<ThemeEvent, ThemeState> with WidgetsBinding
     return super.close();
   }
 
-  ThemeBloc() : super(ThemeState(themeData: ThemeData.light(), appThemeMode: AppThemeMode.light)){
+  ThemeBloc() : super(ThemeState(themeData: ThemeData.light(), appThemeMode: AppThemeMode.system)){
     on<ThemeChanged>(_onThemeChanged, transformer: Transformer.throttleRestartable());
     WidgetsBinding.instance.addObserver(this);
   }
